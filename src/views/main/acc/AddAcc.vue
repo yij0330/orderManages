@@ -100,12 +100,12 @@ export default {
           ).then((res) => {
             if (res.data.code == 0) {
               this.$message({
-                message: res.data.msg,
+                message: "食力派提醒:" + res.data.msg,
                 type: "success",
               });
               this.ruleForm.acc = "";
               this.ruleForm.pwd = "";
-            } else this.$message.error(res.data.msg);
+            } else this.$message.error("食力派提醒:" + res.data.msg);
           });
         } else {
           console.log("error submit!!");
@@ -121,7 +121,7 @@ export default {
 </script> 
 
 <style lang="less" scoped>
-.el-input {
-  width: 300px;
+.el-input,.el-select {
+  width: 200px;
 }
 </style>

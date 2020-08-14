@@ -159,6 +159,14 @@ export default {
     },
     //点击确定
     sureBtn() {
+      this.oldShopInfo.price = parseFloat(this.oldShopInfo.price)
+      if(JSON.stringify(this.oldShopInfo) == JSON.stringify(this.form)){
+         this.$message({
+            message: "食力派提醒: 当前信息与原信息一致",
+            type: "warning",
+          });
+        return
+      }
       edititem(
         this.form.name,
         this.form.category,
@@ -170,12 +178,12 @@ export default {
         console.log(res.data);
         if (res.data.code == 0) {
           this.$message({
-            message: res.data.msg,
+            message: "食力派提醒:" + res.data.msg,
             type: "success",
           });
           this.updataList();
           this.dialogVisible = false;
-        } else this.$message.error(res.data.msg);
+        } else this.$message.error("食力派提醒:" + res.data.msg);
       });
     },
     handleEdit(row) {
@@ -184,6 +192,7 @@ export default {
       categories().then((res) => {
         this.form.options = res.data.categories;
         this.dialogVisible = true;
+        this.oldShopInfo = {...this.form};
       });
     },
     handleAvatarSuccess(res) {
@@ -195,7 +204,7 @@ export default {
     },
     //删除
     handleDelete(row) {
-      this.$confirm("确定删除此商品信息", "删除商品", {
+      this.$confirm("确定删除此商品信息", "食力派提醒:", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -204,17 +213,17 @@ export default {
           goodDel(row.id).then((res) => {
             if (res.data.code == 0) {
               this.$message({
-                message: res.data.msg,
+                message: "食力派提醒:" + res.data.msg,
                 type: "success",
               });
               this.updataList();
-            } else this.$message.error(res.data.msg);
+            } else this.$message.error("食力派提醒:" + res.data.msg);
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除",
+            message: "食力派提醒:已取消删除",
           });
         });
     },

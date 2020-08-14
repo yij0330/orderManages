@@ -11,7 +11,9 @@
         unique-opened
       >
         <h4 class="title_h4">
-          <i class="el-icon-dish-1"></i> 外卖配送中心
+          <el-avatar
+            src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1170284165,194880099&fm=26&gp=0.jpg"
+          ></el-avatar>食力派外卖商家中心
         </h4>
         <div v-for="item in powerArr" :key="item.url">
           <el-menu-item :index="item.url" v-if="!item.children">
@@ -39,11 +41,13 @@
         </el-breadcrumb>
         <div class="user-div">
           欢迎你,
-          <router-link to="/main/personal" class="username">{{ account }}
-          <el-avatar :size="40">
-            <img :src="imgUrl" />
-          </el-avatar>
+          <router-link to="/main/personal" class="username">
+            {{ account }}
+            <el-avatar :size="40">
+              <img :src="imgUrl" />
+            </el-avatar>
           </router-link>
+          <el-button type="primary" size="mini" @click="exitLogin">退出</el-button>
         </div>
       </el-header>
       <el-main>
@@ -114,14 +118,12 @@ export default {
       imgUrl: "",
       account: "",
       breadList: [],
-      role: localStorage.role
+      role: localStorage.role,
     };
   },
   computed: {
     powerArr() {
-      return this.asideList.filter((item) =>
-        item.roles.includes(this.role)
-      );
+      return this.asideList.filter((item) => item.roles.includes(this.role));
     },
   },
   created() {
@@ -132,7 +134,7 @@ export default {
       if (res.data.code != 0) {
         this.acc = "请登录";
         this.$message({
-          message: "登录失效，等登录",
+          message: "食力派提醒:登录失效，等登录",
           type: "warning",
         });
         this.$router.push("/login");
@@ -147,7 +149,7 @@ export default {
     });
 
     //当前的hash值
-    this.breadList = this.$route.meta.breadList
+    this.breadList = this.$route.meta.breadList;
   },
   methods: {
     refresh() {
@@ -158,14 +160,34 @@ export default {
         this.imgUrl = accountInfo.imgUrl;
       });
     },
+    exitLogin() {
+      this.$confirm("您是否确定退出登录?", "食力派提醒:", {
+        confirmButtonText: "残忍退出",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+          localStorage.token = ""
+          this.$router.push('/')
+          this.$message({
+            type: "success",
+            message: "食力派提醒:已退出登录!",
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "食力派提醒:已取消删除",
+          });
+        });
+    },
   },
   watch: {
-    //检测所有需要变化的值 
+    //检测所有需要变化的值
     //检测路由变化
-    $route(to){
-      this.breadList = to.meta.breadList
-    }
-  }
+    $route(to) {
+      this.breadList = to.meta.breadList;
+    },
+  },
 };
 </script>
 
@@ -186,16 +208,8 @@ html {
     .title_h4 {
       margin-left: 20px;
       color: #fff;
-      i {
-        text-align: center;
-        display: inline-block;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        font-size: 18px;
-        background: skyblue;
+      .el-avatar {
         vertical-align: middle;
-        line-height: 40px;
       }
     }
     .el-menu {

@@ -18,8 +18,11 @@
 export default {
   data() {
     return {
-      timeRange: null,
+      timeRange: ["2020-01-01 00:00:00", "2020-12-31 00:00:00"],
     };
+  },
+  created(){
+    this.$emit("getTimeRange", this.timeRange);
   },
   methods: {
     searchOrder() {

@@ -65,13 +65,13 @@ export default {
     handleAvatarSuccess(res) {
       if (res.code == 0) {
         this.$message({
-          message: res.msg,
+          message: "食力派提醒:" + res.msg,
           type: "success",
         });
         this.updataInfo();
         //向main传参   main里面接
         this.$bus.$emit("updatahead");
-      } else this.$message.error(res.msg);
+      } else this.$message.error("食力派提醒:" + res.msg);
     },
   },
 };

@@ -45,7 +45,7 @@ export default {
             this.checkPwdMsg = res.data.msg;
           } else {
             this.status = true;
-            this.checkPwdMsg = res.data.msg;
+            this.checkPwdMsg = "旧密码错误，请重新输入";
           }
         });
         callback();
@@ -92,7 +92,7 @@ export default {
         if (valid) {
           if (this.ruleForm.oldPwd == this.ruleForm.newPwd) {
             this.$message({
-              message: "与原密码一致",
+              message: "食力派提醒:与原密码一致",
               type: "warning",
             });
           }
@@ -101,14 +101,14 @@ export default {
             editPwd(this.ruleForm.newPwd, localStorage.id).then((res) => {
               if (res.data.code == 0) {
                 this.$message({
-                  message: res.data.msg,
+                  message: "食力派提醒:" + res.data.msg,
                   type: "success",
                 });
                 this.$router.push("/");
               }
             });
         } else {
-          this.$message.error("请完善信息~~~");
+          this.$message.error("食力派提醒:请完善信息~~~");
           return false;
         }
       });

@@ -42,17 +42,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage1"
-        :page-sizes="[3, 5, 10, 20]"
-        :page-size="pagesize"
-        layout="total, sizes,prev, pager, next, jumper"
-        :total="total"
-      ></el-pagination>
-    </div> -->
     <Pages @curPageSize="pageSize" :Total="total" @curPage="pages"></Pages>
     <el-dialog title="添加分类" :visible.sync="dialogFormVisible" width="400px">
       <el-form :model="form" status-icon :rules="rules" ref="form" class="demo-form">
@@ -152,12 +141,12 @@ export default {
             if (res.data.code == 0) {
               this.form.cateName = "";
               this.$message({
-                message: res.data.msg,
+                message: "食力派提醒:" + res.data.msg,
                 type: "success",
               });
               this.dialogFormVisible = false;
               this.updataList();
-            } else this.$message.error(res.msg);
+            } else this.$message.error("食力派提醒:" + res.msg);
           });
         } else {
           console.log("error submit!!");
@@ -184,7 +173,7 @@ export default {
     },
     //删除
     handleDelete(row) {
-      this.$confirm("是否确定删除此商品分类", "删除商品分类", {
+      this.$confirm("是否确定删除此商品分类", "食力派提醒:", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -193,7 +182,7 @@ export default {
           delCate(row.id).then((res) => {
             if (res.data.code == 0) {
               this.$message({
-                message: res.data.msg,
+                message: "食力派提醒:" + res.data.msg,
                 type: "success",
               });
               this.updataList();
@@ -203,7 +192,7 @@ export default {
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除",
+            message: "食力派提醒:已取消删除",
           });
         });
     },

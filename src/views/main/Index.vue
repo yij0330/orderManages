@@ -14,10 +14,8 @@
     <el-card class="box-card">
       <Echarts :Option="echarts_option"></Echarts>
     </el-card>
-    <p>{{  num  }}</p>
   </div>
 </template>
-
 <script>
 import Echarts from "@/components/Echarts"
 import { totaldata } from "@/api/apis";
@@ -35,21 +33,24 @@ export default {
         },
       ],
       echarts_option: {},
-      num: 100000,
     };
   },
   methods: {
-    getNum(){
-      this.num = this.num.toString().split('').reverse().join('')
-      
+    getNum(num){
+      let str = num.toString().split('').reverse().join('');
+      let newNum = '';
+      for(let i=0; i<str.length; i += 3){
+        newNum += str.substr(i,3) + ","
+      }
+      return newNum.split("").reverse().join("").substr(1)
     }
   },
   mounted() {
     totaldata().then((res) => {
-      this.list[0].allPrice = res.data.totalOrder;
-      this.list[1].allPrice = res.data.totalAmount;
-      this.list[2].allPrice = res.data.todayOrder;
-      this.list[3].allPrice = res.data.totayAmount;
+      this.list[0].allPrice = this.getNum(res.data.totalOrder);
+      this.list[1].allPrice = this.getNum(res.data.totalAmount);
+      this.list[2].allPrice = this.getNum(res.data.todayOrder);
+      this.list[3].allPrice = this.getNum(res.data.totayAmount);
       this.echarts_option = {
         title: {
           text: "数据统计",

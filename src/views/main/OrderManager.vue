@@ -30,9 +30,10 @@
         start-placeholder="开始日期"
         end-placeholder="结束日期"
         align="center"
+        style="width:300px"
       ></el-date-picker>
-      <el-button size="small" type="primary" @click="clearBtn">清空</el-button>
-      <el-button size="small" type="primary" @click="sreachBtn">查询</el-button>
+      <el-button size="mini" type="primary" @click="clearBtn">清空</el-button>
+      <el-button size="mini" type="primary" @click="sreachBtn">查询</el-button>
     </div>
     <el-table
       :data="tableData"
@@ -59,13 +60,13 @@
       </el-table-column>
     </el-table>
     <Pages @curPageSize="pageSize" :Total="total" @curPage="pages"></Pages>
-    <el-dialog :title="titleMsg" :visible.sync="dialogFormVisible" width="450px">
+    <el-dialog :title="titleMsg" :visible.sync="dialogFormVisible" width="700px">
       <el-form :model="form" :disabled="isDisabled">
         <el-form-item label="订单号" :label-width="formLabelWidth">
           <el-input v-model="form.orderNo" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="下单时间" :label-width="formLabelWidth">
-          <el-input v-model="form.orderTime" autocomplete="off"></el-input>
+          <el-date-picker v-model="form.orderTime" type="datetime"></el-date-picker>
         </el-form-item>
         <el-form-item label="联系电话" :label-width="formLabelWidth">
           <el-input v-model="form.phone" autocomplete="off"></el-input>
@@ -77,7 +78,7 @@
           <el-input v-model="form.deliverAddress" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="送达时间" :label-width="formLabelWidth">
-          <el-input v-model="form.deliveryTime" autocomplete="off"></el-input>
+          <el-date-picker v-model="form.deliveryTime" type="datetime"></el-date-picker>
         </el-form-item>
         <el-form-item label="备注" :label-width="formLabelWidth">
           <el-input v-model="form.remarks" autocomplete="off"></el-input>
@@ -87,7 +88,7 @@
         </el-form-item>
         <el-form-item label="订单状态" :label-width="formLabelWidth">
           <el-select v-model="form.orderState" placeholder="订单状态">
-            <el-option v-for="item in options" :key="item" :label="item" :value="item"></el-option>
+            <el-option v-for="item in newOptions" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -113,6 +114,7 @@ export default {
       pagesize: 5,
       total: 1,
       options: ["全部", "已完成", "已受理", "派送中"],
+      newOptions: [],
       tableData: [],
       myform: {
         orderNo: "",
@@ -174,7 +176,10 @@ export default {
       if (orderState != "" && orderState != "全部")
         params.orderState = orderState;
       if (date) {
-        params.date = JSON.stringify([getChinaTime(date[0]),getChinaTime(date[1])]);
+        params.date = JSON.stringify([
+          getChinaTime(date[0]),
+          getChinaTime(date[1]),
+        ]);
       }
       this.params = params;
       this.updataList(this.params);
@@ -200,23 +205,29 @@ export default {
       this.row = row;
       //深拷贝
       this.form = { ...row };
+      this.newOptions = [...this.options]
+      this.newOptions.splice(this.newOptions.indexOf("全部"),1)
     },
     sureBtn() {
       if (this.titleMsg == "查看订单详情") {
         this.dialogFormVisible = false;
         return;
       }
+      
       if (JSON.stringify(this.row) === JSON.stringify(this.form)) {
         this.$message({
-          message: "请修改订单信息",
+          message: "食力派提醒:当前信息与原信息一致",
           type: "warning",
         });
         return;
       }
-      orderEdit(this.form).then((res) => {
+      let newForm = {...this.form};
+      newForm.orderTime = getChinaTime(newForm.orderTime)
+      newForm.deliveryTime = getChinaTime(newForm.deliveryTime)
+      orderEdit(newForm).then((res) => {
         if (res.data.code == 0) {
           this.$message({
-            message: res.data.msg,
+            message: "食力派提醒:" + res.data.msg,
             type: "success",
           });
           this.dialogFormVisible = false;
@@ -224,12 +235,12 @@ export default {
         }
       });
     },
-    pageSize(val){
+    pageSize(val) {
       this.pagesize = val;
       this.updataList(this.params);
       this.tableSize.height = "auto";
     },
-    pages(val){
+    pages(val) {
       this.currentpage = val;
       this.updataList(this.params);
       this.tableSize.height = "auto";
@@ -237,7 +248,7 @@ export default {
   },
   components: {
     Pages,
-  }
+  },
 };
 </script>
 
@@ -264,6 +275,13 @@ export default {
   }
   .el-date-editor {
     margin: 0 20px;
+  }
+}
+.el-form {
+  display: flex;
+  flex-wrap: wrap;
+  .el-form-item {
+    width: 45%;
   }
 }
 </style>

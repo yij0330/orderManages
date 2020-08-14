@@ -143,7 +143,7 @@ export default {
       }
     },
     handleDelete(row) {
-      this.$confirm("是否确定删除此用户账号", "删除账号", {
+      this.$confirm("是否确定删除此用户账号", "食力派提醒:", {
         confirmButtonText: "忍痛删除",
         cancelButtonText: "取消",
         type: "warning",
@@ -160,7 +160,7 @@ export default {
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除",
+            message: "食力派提醒:已取消删除",
           });
         });
     },
@@ -183,11 +183,11 @@ export default {
     batchdel() {
       if (!this.ids.length)
         this.$message({
-          message: "请至少选择1条信息",
+          message: "食力派提醒:请至少选择1条信息",
           type: "warning",
         });
       else {
-        this.$confirm("你确定批量删除用户名", "删除用户名", {
+        this.$confirm("你确定批量删除用户名", "食力派提醒:", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning",
@@ -197,14 +197,14 @@ export default {
               this.updata();
               this.$message({
                 type: "success",
-                message: res.data.msg,
+                message: "食力派提醒:" + res.data.msg,
               });
             });
           })
           .catch(() => {
             this.$message({
               type: "info",
-              message: "已取消删除",
+              message: "食力派提醒:已取消删除",
             });
           });
       }

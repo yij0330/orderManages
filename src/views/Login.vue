@@ -1,7 +1,10 @@
 <template>
   <div class="login-div">
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width class="demo-ruleForm">
-      <h4>系统登录</h4>
+      <div class="bigTitle">
+        <p>食力派管理系统</p>
+        <p>SHILIPAI MANAGEMENT SYSTEM</p>
+      </div>
       <el-form-item prop="acc">
         <el-input
           type="text"
@@ -32,8 +35,7 @@
 
 <script>
 import { login } from "../api/apis";
-// import { accReg, pwdReg } from "@/ulits/ulits";
-import { accReg, pwdReg} from '@/ulits/reg'
+import { accReg, pwdReg } from "@/ulits/reg";
 export default {
   data() {
     var validateAcc = (rule, value, callback) => {
@@ -73,16 +75,15 @@ export default {
               localStorage.role = res.data.role;
               localStorage.id = res.data.id;
               this.$message({
-                message: "恭喜你，登录成功",
+                message: "食力派提醒:恭喜你，登录成功",
                 type: "success",
               });
-              // location.hash = "#/main/index";
               //跳转
               this.$router.push("/main/index");
             } else this.errorMsg = res.data.msg;
           });
         } else {
-          console.log("error submit!!");
+          this.errorMsg = "食力派提醒:登录失败";
           return false;
         }
       });
@@ -97,15 +98,26 @@ export default {
 }
 .login-div {
   height: 100%;
-  background: rgb(84, 92, 100);
+  // background: rgb(84, 92, 100);
+  background: linear-gradient(to bottom, #000, #222222,#333333,#444444,#555555,#444444,#333333,#222222,#000);
+  
   display: flex;
   justify-content: center;
   align-items: center;
   .el-form {
-    h4 {
+    position: relative;
+    .bigTitle {
       color: #fff;
-      font-size: 16px;
       text-align: center;
+      margin-bottom: 20px;
+      p {
+        margin: 0;
+        font-size: 20px;
+        &:nth-child(1) {
+          font-size: 30px;
+          letter-spacing: 15px;
+        }
+      }
     }
     width: 350px;
     .el-button {
@@ -116,7 +128,10 @@ export default {
       background: transparent;
     }
     .errorMsg-span {
-      color: red;
+      position: absolute;
+      top: 167px;
+      z-index: 999;
+      color: tomato;
       font-size: 12px;
     }
   }

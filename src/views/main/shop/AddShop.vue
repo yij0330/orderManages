@@ -15,7 +15,7 @@
         <el-input v-model="ruleForm.name" size="small"></el-input>
       </el-form-item>
       <el-form-item label="商品分类" prop="category">
-        <el-select v-model="ruleForm.category" placeholder="请选择">
+        <el-select v-model="ruleForm.category" placeholder="请选择" size="small">
           <el-option
             v-for="(item, index) in options"
             :key="index"
@@ -93,7 +93,7 @@ export default {
       if (res.code == 0) {
         this.ruleForm.imgUrl = res.imgUrl;
         this.$message({
-          message: "图片添加成功",
+          message: "食力派提醒:图片添加成功",
           type: "success",
         });
       }
@@ -104,13 +104,13 @@ export default {
           additem(this.ruleForm).then((res) => {
             if (res.data.code == 0) {
               this.$message({
-                message: res.data.msg,
+                message: "食力派提醒:" + res.data.msg,
                 type: "success",
               });
               for (const key in this.ruleForm) {
                 this.ruleForm[key] = "";
               }
-            } else this.$message.error(res.data.msg);
+            } else this.$message.error("食力派提醒:" + res.data.msg);
           });
         } else {
           return false;

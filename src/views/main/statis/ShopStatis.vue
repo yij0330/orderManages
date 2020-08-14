@@ -20,30 +20,30 @@ export default {
     };
   },
   mounted() {
-    this.refresh();
+    this.refresh(this.timeRange);
   },
   methods: {
     //子传父
     getTime(timeRange) {
-      console.log(timeRange);
+      this.timeRange = timeRange
       if (timeRange) {
-        let newTimeArr = timeRange.map((item) => getChinaTime(item));
-        this.refresh(JSON.stringify(newTimeArr));
+        this.refresh(timeRange);
       } else
         this.$message({
-          message: "请选择时间范围",
+          message: "食力派提醒:请选择时间范围",
           type: "warning",
         });
     },
     searchOrder() {},
-    refresh(date = '["2020-10-01 00:00:00","2020-10-01 00:00:00"]') {
+    refresh(date) {
+      date = JSON.stringify([getChinaTime(date[0]), getChinaTime(date[1])]);
       ordertotal(date).then((res) => {
-        /* if (!res.data.data.length) {
+        if (!res.data.data.length) {
           this.$message({
-            message: "此范围没有数据",
+            message: "食力派提醒:此范围没有数据",
             type: "warning",
           });
-        } */
+        }
         this.echarts_option = {
           title: {
             text: "堆叠区域图",

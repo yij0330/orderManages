@@ -2,9 +2,21 @@
   <el-card class="box-card">
     <div slot="header" class="clearfix">
       <span>店铺管理</span>
-      <el-button style="float: right;" type="primary" @click="storeSave" size="mini">保存</el-button>
+      <el-button
+        style="float: right;"
+        type="primary"
+        @click="storeSave"
+        size="mini"
+      >{{active? "编辑":"保存"}}</el-button>
     </div>
-    <el-form ref="form" :model="form" label-width="80px" width="600" v-loading="fullscreenLoading">
+    <el-form
+      ref="form"
+      :model="form"
+      label-width="80px"
+      width="600"
+      v-loading="fullscreenLoading"
+      :disabled="active"
+    >
       <el-form-item label="店铺名称">
         <el-input v-model="form.name"></el-input>
       </el-form-item>
@@ -20,6 +32,7 @@
       </el-form-item>
       <el-form-item label="店铺头像">
         <el-upload
+          :disabled="active"
           class="avatar-uploader"
           :action="ITEM_SHOP_UPDATA"
           :show-file-list="false"
@@ -29,8 +42,8 @@
         </el-upload>
       </el-form-item>
       <el-form-item label="店铺图片" class="shopPics">
-        
         <el-upload
+          :disabled="active"
           :action="ITEM_SHOP_UPDATA"
           list-type="picture-card"
           :on-success="shopSuccess"
@@ -86,7 +99,7 @@ import {
   ITEM_SHOP_UPDATA,
   SHOW_SHOP_IMG,
 } from "@/api/apis";
-import { getChinaTime } from "@/ulits/ulits"
+import { getChinaTime } from "@/ulits/ulits";
 export default {
   created() {
     this.ITEM_SHOP_UPDATA = ITEM_SHOP_UPDATA;
@@ -105,6 +118,7 @@ export default {
         "特价饮品8折抢购",
         "单人特色套餐",
       ],
+      active: true,
       shopImgs: [],
       ITEM_SHOP_UPDATA: "",
       SHOW_SHOP_IMG: "",
@@ -117,7 +131,7 @@ export default {
       window.setTimeout(() => {
         shopInfo().then((res) => {
           this.form = res.data.data;
-          this.oldShopInfo =JSON.parse(JSON.stringify(res.data.data));
+          this.oldShopInfo = JSON.parse(JSON.stringify(res.data.data));
           this.shopImgs = this.form.pics.map((item) => {
             return {
               name: item,
@@ -141,39 +155,48 @@ export default {
       if (res.code == 0) {
         this.form.pics.push(res.imgUrl);
         this.$message({
-          message: "添加图片成功",
+          message: "食力派提醒:添加图片成功",
           type: "success",
         });
       }
     },
-    removeImg(res){
-      this.form.pics.splice(this.form.pics.indexOf(res.name), 1)
+    removeImg(res) {
+      this.form.pics.splice(this.form.pics.indexOf(res.name), 1);
     },
 
     //修改商店信息
     storeSave() {
       let newShopObj = { ...this.form };
       newShopObj.pics = JSON.stringify([...newShopObj.pics]);
-      newShopObj.date = JSON.stringify([getChinaTime(newShopObj.date[0]),getChinaTime(newShopObj.date[1])]);
+      newShopObj.date = JSON.stringify([
+        getChinaTime(newShopObj.date[0]),
+        getChinaTime(newShopObj.date[1]),
+      ]);
       newShopObj.supports = JSON.stringify(newShopObj.supports);
-      if (
-        JSON.stringify(this.oldShopInfo) === JSON.stringify(this.form)
-      ) {
-        this.$message({
-          message: "请修改商店信息",
-          type: "warning",
-        });
-        return;
-      }
-      shopEdit(newShopObj).then((res) => {
-        if (res.data.code == 0) {
+      if (this.active == true) this.active = false;
+      else {
+        if (JSON.stringify(this.oldShopInfo) === JSON.stringify(this.form)) {
           this.$message({
-            message: "恭喜你，" + res.data.msg,
-            type: "success",
+            message: "食力派提醒:当前信息与原信息一致",
+            type: "warning",
           });
-          this.upShopInfo();
+          return;
         }
-      });
+        shopEdit(newShopObj).then((res) => {
+          if (res.data.code == 0) {
+            this.$message({
+              message: "食力派提醒:恭喜你，" + res.data.msg,
+              type: "success",
+            });
+            // this.upShopInfo();
+            this.fullscreenLoading = true
+            window.setTimeout(() => {
+              this.fullscreenLoading = false
+            },1000)
+            this.active = true
+          }
+        });
+      }
     },
   },
 };
