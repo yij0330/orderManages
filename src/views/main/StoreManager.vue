@@ -29,7 +29,6 @@
         </el-upload>
       </el-form-item>
       <el-form-item label="店铺图片" class="shopPics">
-        
         <el-upload
           :action="ITEM_SHOP_UPDATA"
           list-type="picture-card"
