@@ -176,8 +176,9 @@ export default {
       if (this.active == true) this.active = false;
       else {
         if (JSON.stringify(this.oldShopInfo) === JSON.stringify(this.form)) {
+          this.active = true
           this.$message({
-            message: "食力派提醒:当前信息与原信息一致",
+            message: "食力派提醒:当前信息未修改",
             type: "warning",
           });
           return;
@@ -188,7 +189,6 @@ export default {
               message: "食力派提醒:恭喜你，" + res.data.msg,
               type: "success",
             });
-            // this.upShopInfo();
             this.fullscreenLoading = true
             window.setTimeout(() => {
               this.fullscreenLoading = false

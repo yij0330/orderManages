@@ -43,6 +43,7 @@ export default {
           if (res.data.code == 0) {
             this.status = false;
             this.checkPwdMsg = res.data.msg;
+            this.sureOldPwd = this.ruleForm.oldPwd;
           } else {
             this.status = true;
             this.checkPwdMsg = "旧密码错误，请重新输入";
@@ -54,8 +55,11 @@ export default {
     var validateNew = (rule, value, callback) => {
       if (!pwdReg.test(value)) {
         callback(new Error("请输入合法的密码"));
-      } else {
-        if (this.ruleForm.checkPwd !== "") {
+      } else if(value == this.sureOldPwd){
+        callback(new Error("与原密码一致，请修改"));
+      }
+      else {
+        if (this.ruleForm.checkPwd != "") {
           this.$refs.ruleForm.validateField("checkPwd");
         }
         callback();
@@ -64,7 +68,7 @@ export default {
     var validateCheckPwd = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请再次输入密码"));
-      } else if (value !== this.ruleForm.newPwd) {
+      } else if (value != this.ruleForm.newPwd) {
         callback(new Error("两次输入密码不一致!"));
       } else {
         //通过
@@ -90,23 +94,16 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.ruleForm.oldPwd == this.ruleForm.newPwd) {
-            this.$message({
-              message: "食力派提醒:与原密码一致",
-              type: "warning",
-            });
-          }
           //修改密码
-          else
-            editPwd(this.ruleForm.newPwd, localStorage.id).then((res) => {
-              if (res.data.code == 0) {
-                this.$message({
-                  message: "食力派提醒:" + res.data.msg,
-                  type: "success",
-                });
-                this.$router.push("/");
-              }
-            });
+          editPwd(this.ruleForm.newPwd, localStorage.id).then((res) => {
+            if (res.data.code == 0) {
+              this.$message({
+                message: "食力派提醒:" + res.data.msg,
+                type: "success",
+              });
+              this.$router.push("/");
+            }
+          });
         } else {
           this.$message.error("食力派提醒:请完善信息~~~");
           return false;

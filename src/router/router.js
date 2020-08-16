@@ -76,13 +76,13 @@ const router = new VueRouter({
                     path:'/main/shopStatis',
                     name:'statis',
                     component: () => import('../views/main/statis/ShopStatis'),
-                    meta: { breadList: ["商品统计"] }
+                    meta: { breadList: ["销售统计","商品统计"] }
                 },
                 {
                     path:'/main/orderStatis',
                     name:'orderStatis',
                     component: () => import('../views/main/statis/OrderStatis'),
-                    meta: { breadList: ["订单统计"] }
+                    meta: { breadList: ["销售统计","订单统计"] }
                 },
                 {
                     path:'/main/orderManager',
@@ -103,7 +103,6 @@ router.beforeEach((to, from,next) => {
     if( to.path != '/'){
         checkToken(localStorage.token).then(res => {
             if(res.data.code == 0){
-                // if(localStorage.role == "normal" && to.path == '/main/index')
                 next()
             }else
                 next('/')

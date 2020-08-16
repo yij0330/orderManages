@@ -98,7 +98,6 @@ export default {
 }
 .login-div {
   height: 100%;
-  // background: rgb(84, 92, 100);
   background: linear-gradient(to bottom, #000, #222222,#333333,#444444,#555555,#444444,#333333,#222222,#000);
   display: flex;
   justify-content: center;

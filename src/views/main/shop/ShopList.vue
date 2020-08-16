@@ -8,6 +8,7 @@
       v-loading="loading"
       element-loading-text="正在拼命加载中"
       :style="tableSize"
+      @expand-change="isExpand"
     >
       <el-table-column type="expand">
         <template slot-scope="props">
@@ -156,6 +157,9 @@ export default {
           this.loading = false;
         });
       }, 1000);
+    },
+    isExpand(){
+      this.tableSize.height = "auto";
     },
     //点击确定
     sureBtn() {

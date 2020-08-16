@@ -39,16 +39,20 @@
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item v-for="item in breadList" :key="item">{{item}}</el-breadcrumb-item>
         </el-breadcrumb>
-        <div class="user-div">
-          欢迎你,
-          <router-link to="/main/personal" class="username">
+        <el-dropdown trigger="click">
+          <div class="user-div el-dropdown-link">
+            欢迎你,
             {{ account }}
+            <i class="el-icon-arrow-down el-icon--right"></i>
             <el-avatar :size="40">
               <img :src="imgUrl" />
             </el-avatar>
-          </router-link>
-          <el-button type="primary" size="mini" @click="exitLogin">退出</el-button>
-        </div>
+          </div>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item @click.native="$router.push('/main/personal')">个人中心</el-dropdown-item>
+            <el-dropdown-item @click.native="exitLogin">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </el-header>
       <el-main>
         <router-view></router-view>
@@ -165,9 +169,10 @@ export default {
         confirmButtonText: "残忍退出",
         cancelButtonText: "取消",
         type: "warning",
-      }).then(() => {
-          localStorage.token = ""
-          this.$router.push('/')
+      })
+        .then(() => {
+          localStorage.token = "";
+          this.$router.push("/");
           this.$message({
             type: "success",
             message: "食力派提醒:已退出登录!",
@@ -222,15 +227,12 @@ html {
     justify-content: space-between;
     align-items: center;
     font-size: 12px !important;
+    user-select: none;
     .el-avatar {
       vertical-align: middle;
     }
-    .user-div {
-      .username {
-        margin-right: 10px;
-        text-decoration: none;
-        color: #333;
-      }
+    i{
+      margin-right: 10px;
     }
   }
   //主要内容
